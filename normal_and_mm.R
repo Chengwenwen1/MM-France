@@ -49,13 +49,13 @@ p2<- DotPlot(normal.bm,features = big.marker %>% unique(),cluster.idents = T,gro
 cowplot::plot_grid(p1,p2,rel_widths = c(0.7,1))
 ##
 normal.bm <- subset(normal.bm,seurat_clusters %in% setdiff(0:30,27:29))
-saveRDS(normal.bm,file = '/home/chengww/data/project/multiple_myeloma/midel_result_R4/normal_BM.rds')
+saveRDS(normal.bm,file = '*/normal_BM.rds')
 ##------------------------------------------------------
 
 ##Step---integration for normal & MM cells--------------------------------------
 #read normal & MM data
-normal.bm <- readRDS('/home/chengww/data/project/multiple_myeloma/midel_result_R4/normal_BM.rds')
-MM_obj <- readRDS('/home/chengww/data/project/multiple_myeloma/midel_result_R4/MM_obj_celltype.RDS')
+normal.bm <- readRDS('*/normal_BM.rds')
+MM_obj <- readRDS('*/MM_obj_celltype.RDS')
 #
 MM_obj$orig.ident; normal.bm$orig.ident
 mm_list <- list(MM_obj,normal.bm)
@@ -90,12 +90,12 @@ p2<- DotPlot(mm_normal,features = big.marker %>% unique(),cluster.idents = T,gro
   theme(axis.text.x = element_text(size=10,angle = 60,vjust = 1, hjust=1)) + NoLegend() 
 p1|p2
 FeaturePlot(mm_normal,features = c('LYZ','GZMB'),split.by  = 'orig.ident')
-#saveRDS(mm_normal,file = '/home/chengww/data/project/multiple_myeloma/midel_result_R4/mm_normal1.rds')
+#saveRDS(mm_normal,file = '*/mm_normal1.rds')
 
 #mm_normal <- subset(mm_normal,seurat_clusters %in% setdiff(0:52,c(45,48)))
 
 #mm_normal <- subset(mm_normal,seurat_clusters %in% setdiff(0:51,c(38)))
-saveRDS(mm_normal,file = '/home/chengww/data/project/multiple_myeloma/midel_result_R4/mm_normal_2.rds')
+saveRDS(mm_normal,file = '*/mm_normal_2.rds')
 
 
 DefaultAssay(mm_normal) <- "integrated"
@@ -218,6 +218,6 @@ bigcol <- c('HSPC'="#A6CEE3",'EPC'="#559AC6",'Stromal cells'="#33A02C",'T & NK'=
 )
 DimPlot(mm_normal,reduction = 'umap',label = T,cols =bigcol,
         group.by ='celltype_big',repel = T,raster = T)+labs(title = 'celltype')
-saveRDS(mm_normal,file = '/home/chengww/data/project/multiple_myeloma/midel_result_R4/normal_mm/mm_normal_common.rds')
+saveRDS(mm_normal,file = '*/mm_normal_common.rds')
 
 
