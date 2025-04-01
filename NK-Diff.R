@@ -21,14 +21,14 @@ DoHeatmap(nk,features = top2$gene,slot ='scale.data',size=5.5,draw.lines=F,angle
 
 
 
-####组间差异基因
+
 DefaultAssay(MM_t)<-'RNA'
 Idents(MM_t)<-'celltype'
 gene.t <- list()
 plot.fire <-list()
 gene.data <- data.frame()
 
-##计算CR vs NR
+##CR vs NR
 sub_mm <- subset(MM_t,orig.ident == 'MM')
 for (i in c("NKdim","NKbright")){
   gene.t[[i]] <- FindMarkers(sub_mm,ident.1 = 'CR',group.by='Response',min.pct = 0.25,logfc.threshold = 0,subset.ident = i)#group.by = 'orig.ident'
@@ -41,18 +41,18 @@ for (i in c("NKdim","NKbright")){
   
   plot.fire[[i]] <- ggplot(gene.t[[i]],aes(x=avg_log2FC,y=-log10(p_val_adj),color=threshold))+
     geom_point()+
-    scale_color_manual(values=c( "#35978F", "#BF812D","#808080"))+#确定点的颜色
+    scale_color_manual(values=c( "#35978F", "#BF812D","#808080"))+
     ggrepel::geom_text_repel(
       data = gene.t[[i]][gene.t[[i]]$p_val_adj<0.05 & abs(gene.t[[i]]$avg_log2FC)>0.25,] %>%
         group_by(threshold) %>% top_n(10,abs(avg_log2FC)),
       aes(label = geneid),
       size = 3,
-      segment.color = "black", show.legend = FALSE)+#添加关注的点的基因名
-    ylab('-log10 (p-adj)')+#修改y轴名称
-    xlab('log2 (FoldChange)')+#修改x轴名称
+      segment.color = "black", show.legend = FALSE)+
+    ylab('-log10 (p-adj)')+
+    xlab('log2 (FoldChange)')+
     labs(color='',title = i)+
-    geom_vline(xintercept=c(-0.25,0.25),lty=3,col="black",lwd=0.5) +#添加横线|FoldChange|>2
-    geom_hline(yintercept = -log10(0.05),lty=3,col="black",lwd=0.5)+#添加竖线padj<0.05
+    geom_vline(xintercept=c(-0.25,0.25),lty=3,col="black",lwd=0.5) +
+    geom_hline(yintercept = -log10(0.05),lty=3,col="black",lwd=0.5)+
     gg.theme#+theme(legend.position = c(0.6,0.95))
   #saveRDS(plot.fire,'./plot.fire.rds')
 }
@@ -60,7 +60,6 @@ plot.fire$NKdim+NoLegend() |plot.fire$NKbright
 
 
 ##go
-###GO富集单独做个简单的
 gene.t <- list()
 gsea.data <-list()
 go.fig <- list()
@@ -76,7 +75,7 @@ for (i in levels_ctype_t[12:13]) {#as.character(levels(MM_t$celltype))[1:8]
                                         ifelse(gene.t[[i]]$avg_log2FC >= 0.25 ,'NR high','CR high'),'NS'),
                                  levels=c('NR high','CR high','NS'))
   gene.t[[i]]$geneid <- rownames(gene.t[[i]])
-  #提取差异基因
+
   gsea.data[[i]] <- gene.t[[i]][gene.t[[i]]$p_val_adj<0.05 & abs(gene.t[[i]]$avg_log2FC) >0.25,] 
   for (t in unique(gsea.data[[i]]$threshold)){
     gene <- gsea.data[[i]]$geneid[which(gsea.data[[i]]$threshold==t)]
@@ -101,12 +100,12 @@ for (i in levels_ctype_t[12:13]) {#as.character(levels(MM_t$celltype))[1:8]
       select_fun = min,
       measure = "Wang",
       semData = NULL
-    )#GO去冗余
+    )
     go.fig[[z]] <- dotplot(go[[z]] ,showCategory=15,title=paste(i,t,sep = '-'))+gg.theme
   }
 }
 
-##挑选一些terms显示在NR组的高度富集功能----NKdim--------------------------------
+##----NKdim--------------------------------
 View(go$`NKdim_CR high`@result)
 View(go$`NKdim_NR high`@result)
 go$`NKdim_CR high`@result$group <-'CR'
@@ -136,12 +135,12 @@ p1 <- ggplot(data = go4,
   geom_bar(aes(fill = -log10(p.adjust)), stat = "identity", width = 0.8, alpha = 0.7) +
   scale_fill_distiller(palette = "YlOrRd", direction = 1) +
   labs(x = "GeneRatio", y = "Description", title = "Different terms in NKdim") +
-  geom_text(aes(x = text_x, #用新增的重复数组控制文本标签起始位置
+  geom_text(aes(x = text_x,
                 label = Description),
-            hjust = 0)+ #hjust=0，左对齐
+            hjust = 0)+ #hjust=0，
   gg.theme+ theme(axis.text.y = element_blank())
 p1
-##挑选一些terms显示在NR组的高度富集功能----NKbright-----------------------------
+##----NKbright-----------------------------
 View(go$`NKbright_CR high`@result)
 View(go$`NKbright_NR high`@result)
 
@@ -174,13 +173,13 @@ p2 <- ggplot(data = go4,
   geom_bar(aes(fill = -log10(p.adjust)), stat = "identity", width = 0.8, alpha = 0.7) +
   scale_fill_distiller(palette = "YlOrRd", direction = 1) +
   labs(x = "GeneRatio", y = "Description", title = "Different terms in NKbright") +
-  geom_text(aes(x = text_x, #用新增的重复数组控制文本标签起始位置
+  geom_text(aes(x = text_x, 
                 label = Description),
-            hjust = 0)+ #hjust=0，左对齐
+            hjust = 0)+ #hjust=0,
   gg.theme+ theme(axis.text.y = element_blank())
 p1|p2
 
-##检验单个基因的表达水平差异
+##
 VlnPlot(subset(MM_t,Response!='HD'& celltype %in% c('NKdim','NKbright') ),
         features = c('CD226','KLRK1','NCR1'),#CD64,CD32
         pt.size=0,split.by = 'Response',cols = resp.col)&
