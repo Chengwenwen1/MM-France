@@ -24,7 +24,7 @@ FeaturePlot(obj,features = c("ADCC"),order = T,raster = T,
 
 
 
-###AddModuleScore计算免疫得分------------------1---------------------------
+###AddModuleScore计------------------1---------------------------
 inflammatory_genes <- read.csv('*/inflammatory_genes.csv')
 head(inflammatory_genes)
 inflammatory_genes <- as.list(inflammatory_genes)
@@ -72,7 +72,7 @@ ggplot(subset(resp.data,celltype=='NKdim'& Response!='HD'),
   
   labs(title = 'Correlation for inflammatory_score and CD16 in NKdim')
 
-##统计各样本的NK细胞亚群比例--计算比例和炎性得分的相关性
+##
 obj$celltype <- as.character(obj$celltype)
 tmp_data <- table(obj$celltype,obj$Patient)
 tmp_data <-apply(tmp_data,2,prop.table) %>% as.data.frame() %>% rownames_to_column(.,'celltype')
@@ -93,7 +93,7 @@ ggplot(tmp_data, aes(x = celltype, y = Freq, fill = Response)) +
   scale_fill_manual(values = resp.col)+
   labs(fill='')+
   gg.theme+
-  theme(axis.text.x = element_text(angle = 60,hjust = 1))#三组检验
+  theme(axis.text.x = element_text(angle = 60,hjust = 1))#
 ##
 head(obj@meta.data)
 score_data <- obj@meta.data %>% 
