@@ -1,8 +1,5 @@
 
-#obj<-readRDS('/home/chengww/data3/project/multiple_myeloma/midel_result_R4/normal_mm/mm_normal_common_all.rds')
-# obj<-readRDS('/home/chengww/data3/project/multiple_myeloma/midel_result_R4/normal_mm/MM_t_celltype_inte.RDS')
-# obj <-merge(obj,mm_myeloid)
-# obj<-NormalizeData(obj,normalization.method = "LogNormalize")
+
 obj <- nk
 Idents(obj) <- 'celltype'
 DefaultAssay(obj) <-'RNA'
@@ -28,7 +25,7 @@ FeaturePlot(obj,features = c("ADCC"),order = T,raster = T,
 
 
 ###AddModuleScore计算免疫得分------------------1---------------------------
-inflammatory_genes <- read.csv('/home/chengww/data3/project/multiple_myeloma/code/inflammatory_genes.csv')
+inflammatory_genes <- read.csv('*/inflammatory_genes.csv')
 head(inflammatory_genes)
 inflammatory_genes <- as.list(inflammatory_genes)
 DefaultAssay(obj) <-'RNA'
@@ -133,7 +130,7 @@ ggplot(resp.data1,aes(x=inflammatory_score,y=ADCP, colour =Response))+
 ##inteferon
 library(data.table)
 library(Seurat)
-interferon_genes <- read.csv('/home/chengww/data3/project/multiple_myeloma/midel_result_R4/normal_mm/interferon_genes.txt')
+interferon_genes <- read.csv('*/interferon_genes.txt')
 head(interferon_genes)
 interferon_genes <- as.list(interferon_genes)
 DefaultAssay(obj) <-'RNA'
