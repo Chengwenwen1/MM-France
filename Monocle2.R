@@ -1,9 +1,9 @@
-setwd('/home/chengww/data/project/multiple_myeloma/midel_result_R4/normal_mm/monocle2/')
+setwd('*/')
 library(monocle)
 library(Seurat)
 library(dplyr)
 
-mm_pc <- readRDS('../mm_pc_plasma.RDS')
+mm_pc <- readRDS('*/mm_pc_plasma.RDS')
 patie.col_m=c("NR-A052009"="#81571e",#"041-011-NR"="blue","044-004-NR"="blue", 
               "NR-A035004"='#966523',
               "NR-A098004"="#aa7328",
