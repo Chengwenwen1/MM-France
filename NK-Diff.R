@@ -10,13 +10,7 @@ Idents(nk) <- 'celltype'
 find.gene <- FindAllMarkers(nk,only.pos = T,min.pct = 0.25,logfc.threshold = 0.25)
 top2 <- find.gene %>% group_by(cluster) %>% top_n(5,avg_log2FC)
 DoHeatmap(nk,features = top2$gene,slot ='scale.data',size=5.5,draw.lines=F,angle = 0,
-          group.colors =mycol_t) + 
-  scale_fill_gradientn(colors= c(
-    "#55A1CA","#61A7CE","#6CAED1","#78B5D5","#83BCD9",
-    "#8FC3DD","#98C8DF","#A0CCE1","#A8D0E3","#B0D4E5","#B9D8E7","#C1DCE9","#C9E0EB","#D1E4ED","#DAE8EF","#E2ECF1","#EAF0F3",
-    "#F2F4F5","#F6F3F2","#F6ECE8","#F6E6DF","#F6DFD5","#F5D8CC","#F5D2C2","#F5CBB8","#F5C4AF","#F4BEA5","#F4B79C","#F4B092",
-    "#F4AA89","#F3A180","#EF9478","#EC8670","#E87968","#E56B60","#E25E58","#DE5050","#DB4348","#D73540","#D42838","#D01A30"
-  ))
+          group.colors =mycol_t) 
 ###
 
 
